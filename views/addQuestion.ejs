@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question</title>
+    <link rel="stylesheet" href="/public.css">
+</head>
+<body>
+    <h1>Add DSA Question</h1>
+    <form action="/add-Question" method="post">
+        <input type="text"
+        name="title"
+        placeholder="Enter Question Title">
+        <br><br>
+        <input type="text"
+        name="difficulty"
+        placeholder="Easy/Medium/Hard">
+        <br><br>
+        <input type="text"
+        name="topic"
+        placeholder="Array/String/DP">
+        <br><br>
+        <textarea name="description"
+        placeholder="Enter Question Description"></textarea>
+        <br><br>
+        <button type="submit"> Add Question</button>
+    </form>
+</body>
+</html>

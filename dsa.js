@@ -16,6 +16,19 @@ app.get("/",(req,res)=>{
     res.render("home");
 });
 
+app.get("/add-question",(req,res)=>{
+    res.render("addQuestion");
+});
+
+app.post("/add-question",async(req,res)=>{
+    const {title , difficulty, topic, description } = req.body;
+    const newQuestion = new Question({
+        title, difficulty, topic, description
+    });
+    await newQuestion.save();                 // mongodb save horha
+    res.send("Question Added Successfully");
+});
+
 app.listen(3000,()=>{
     console.log("Server Started");
 });
