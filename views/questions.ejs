@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Questions</title>
+
+    <link rel="stylesheet" href="/public.css">
+</head>
+
+<body>
+
+    <h1>All DSA Questions</h1>
+
+    <% allQuestions.forEach((q)=> { %>
+
+        <div class="question-card">
+
+            <h2><%= q.title %></h2>
+
+            <p>
+                <strong>Difficulty:</strong>
+                <%= q.difficulty %>
+            </p>
+
+            <p>
+                <strong>Topic:</strong>
+                <%= q.topic %>
+            </p>
+
+            <p>
+                <strong>Description:</strong>
+                <%= q.description %>
+            </p>
+            <form action="/delete/<%= q._id %>?_method=DELETE" method="POST">
+                <button type="submit">Delete</button>
+            </form>
+            <br><br>
+
+            <a href="/edit/<%= q._id %>">
+                <button> Edit </button>
+            </a>
+        </div>
+
+    <% }) %>
+
+</body>
+</html>
