@@ -35,7 +35,79 @@ app.post("/add-Question",async(req,res)=>{
 
 app.get("/Questions",async(req,res)=>{
     const allQuestions = await Question.find();
-    res.render("questions",{allQuestions});
+    const solvedQuestions = await Question.find({
+        solved:true
+    });
+    const totalQuestions = allQuestions.length;
+    const solvedCount = solvedQuestions.length;
+    const progressPercentage = totalQuestions ===0 ? 0
+    : Math.floor((solvedCount / totalQuestions) * 100);
+
+    const easyCount = await Question.countDocuments({
+    difficulty:"Easy"
+});
+    const mediumCount = await Question.countDocuments({
+    difficulty:"Medium"
+});
+   const hardCount = await Question.countDocuments({
+    difficulty:"Hard"
+});
+
+    res.render("questions",{
+        allQuestions,
+        totalQuestions,
+        solvedCount,
+        progressPercentage,
+        easyCount,
+        mediumCount,
+        hardCount
+    });
+});
+
+
+app.get("/questions/search", async (req, res) => {
+    const searchedTopic = req.query.topic;
+    const allQuestions = await Question.find({
+        topic: searchedTopic
+    });
+    const solvedQuestions = allQuestions.filter((q) => q.solved);
+    const totalQuestions = allQuestions.length;
+    const solvedCount = solvedQuestions.length;
+    const progressPercentage =
+        totalQuestions === 0
+        ? 0
+        : Math.floor((solvedCount / totalQuestions) * 100);
+
+    res.render("questions", {
+        allQuestions,
+        totalQuestions,
+        solvedCount,
+        progressPercentage
+    });
+});
+
+app.get("/questions/difficulty/:level", async (req, res) => {
+
+    const level = req.params.level;
+    const allQuestions = await Question.find({
+        difficulty: level
+    });
+
+    const solvedQuestions = allQuestions.filter((q) => q.solved);
+    const totalQuestions = allQuestions.length;
+    const solvedCount = solvedQuestions.length;
+    const progressPercentage =
+        totalQuestions === 0
+        ? 0
+        : Math.floor((solvedCount / totalQuestions) * 100);
+
+    res.render("questions", {
+        allQuestions,
+        totalQuestions,
+        solvedCount,
+        progressPercentage
+    });
+
 });
 
 app.get("/edit/:id", async(req,res)=>{
@@ -55,6 +127,14 @@ app.put("/edit/:id", async(req,res)=>{
         req.params.id,
         req.body
     );
+    res.redirect("/questions");
+});
+
+
+app.patch("/toggle/:id", async(req,res)=>{
+    const foundQuestion = await Question.findById(req.params.id);
+    foundQuestion.solved = !foundQuestion.solved;
+    await foundQuestion.save();
     res.redirect("/questions");
 });
 

@@ -7,15 +7,67 @@
     <title>All Questions</title>
 
     <link rel="stylesheet" href="/public.css">
+
 </head>
 
 <body>
 
     <h1>All DSA Questions</h1>
+    <h3>
+        Progress:
+        <%= solvedCount %> / <%= totalQuestions %>
+    </h3>
+    <h2>
+        <%= progressPercentage %>% Completed
+    </h2>
+
+    <div class="progress-bar">
+        <div 
+            class="progress-fill"
+            style="width: <%= progressPercentage %>%">
+        </div>
+    </div>
+
+    <br>
+
+    <div class="difficulty-counts">
+        <h3>Easy: <%= easyCount %></h3>
+        <h3>Medium: <%= mediumCount %></h3>
+        <h3>Hard: <%= hardCount %></h3>
+    </div>
+
+    <br><br>
+
+    <form action="/questions/search" method="get">
+        <input type="text"
+        name="topic"
+        placeholder="Search by topic">
+        <button type="submit"> Search</button>
+    </form>
+
+        <br>
+
+    <a href="/questions/difficulty/Easy">
+        <button>Easy</button>
+    </a>
+
+    <a href="/questions/difficulty/Medium">
+        <button>Medium</button>
+    </a>
+
+    <a href="/questions/difficulty/Hard">
+        <button>Hard</button>
+    </a>
+
+    <a href="/questions">
+        <button>All</button>
+    </a>
+
+    <br><br>
 
     <% allQuestions.forEach((q)=> { %>
 
-        <div class="question-card">
+        <div class="question-card <%= q.solved ? 'solved-card' : '' %>">
 
             <h2><%= q.title %></h2>
 
@@ -29,6 +81,21 @@
                 <%= q.topic %>
             </p>
 
+            <P>
+                <strong>Status:</strong>
+                <% if(q.solved){ %>
+                solved
+                <% } else { %>
+                Unsolved
+                <% } %>
+            </P>
+
+            <form action="/toggle/<%= q._id %>?_method=PATCH" method="POST">
+                <button type="submit">
+                <%= q.solved ? "Mark as Unsolved" : "Mark as Solved"%>
+                </button>
+            </form>
+
             <p>
                 <strong>Description:</strong>
                 <%= q.description %>
@@ -36,6 +103,7 @@
             <form action="/delete/<%= q._id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete</button>
             </form>
+
             <br><br>
 
             <a href="/edit/<%= q._id %>">

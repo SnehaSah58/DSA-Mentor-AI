@@ -4,7 +4,13 @@ const questionSchema = new mongoose.Schema({
     title: String,
     difficulty: String,
     topic: String,
-    description: String
+    description: String,
+
+    solved:{
+    type : Boolean,
+    default : false
+}
+
 });
 
 module.exports = mongoose.model("Question", questionSchema);
