@@ -40,6 +40,7 @@ app.get("/Questions",async(req,res)=>{
     });
     const totalQuestions = allQuestions.length;
     const solvedCount = solvedQuestions.length;
+    const unsolvedCount = totalQuestions - solvedCount;
     const progressPercentage = totalQuestions ===0 ? 0
     : Math.floor((solvedCount / totalQuestions) * 100);
 
@@ -53,14 +54,22 @@ app.get("/Questions",async(req,res)=>{
     difficulty:"Hard"
 });
 
+const today = new Date();
+const dueQuestions = allQuestions.filter((q)=>{
+    return new Date(q.nextRevisionDate)
+    <= today;
+});
+
     res.render("questions",{
         allQuestions,
         totalQuestions,
         solvedCount,
+        unsolvedCount,
         progressPercentage,
         easyCount,
         mediumCount,
-        hardCount
+        hardCount,
+        dueQuestions
     });
 });
 
@@ -96,9 +105,7 @@ app.get("/questions/difficulty/:level", async (req, res) => {
     const solvedQuestions = allQuestions.filter((q) => q.solved);
     const totalQuestions = allQuestions.length;
     const solvedCount = solvedQuestions.length;
-    const progressPercentage =
-        totalQuestions === 0
-        ? 0
+    const progressPercentage = totalQuestions === 0 ? 0
         : Math.floor((solvedCount / totalQuestions) * 100);
 
     res.render("questions", {
@@ -107,7 +114,64 @@ app.get("/questions/difficulty/:level", async (req, res) => {
         solvedCount,
         progressPercentage
     });
+});
 
+app.get("/questions/sort/priority", async(req,res)=>{
+
+    let allQuestions = await Question.find();
+
+    const priorityOrder = {
+        High:1,
+        Medium:2,
+        Low:3
+    };
+
+    allQuestions.sort((a,b)=>{
+        return priorityOrder[a.revisionPriority]
+        -
+        priorityOrder[b.revisionPriority];
+    });
+
+    const solvedQuestions = allQuestions.filter(
+        (q)=>q.solved
+    );
+
+    const totalQuestions = allQuestions.length;
+
+    const solvedCount = solvedQuestions.length;
+
+    const unsolvedCount =
+    totalQuestions - solvedCount;
+
+    const progressPercentage =
+    totalQuestions===0
+    ? 0
+    : Math.floor(
+        (solvedCount/totalQuestions)*100
+    );
+
+    const easyCount = allQuestions.filter(
+    (q)=>q.difficulty.toLowerCase()==="easy"
+    ).length;
+
+    const mediumCount = allQuestions.filter(
+    (q)=>q.difficulty.toLowerCase()==="medium"
+    ).length;
+
+    const hardCount = allQuestions.filter(
+    (q)=>q.difficulty.toLowerCase()==="hard"
+    ).length;
+
+    res.render("questions",{
+        allQuestions,
+        totalQuestions,
+        solvedCount,
+        unsolvedCount,
+        progressPercentage,
+        easyCount,
+        mediumCount,
+        hardCount
+    });
 });
 
 app.get("/edit/:id", async(req,res)=>{
@@ -123,10 +187,21 @@ app.delete("/delete/:id", async (req,res)=>{
 });
 
 app.put("/edit/:id", async(req,res)=>{
+    req.body.lastRevised = new Date();
+    req.body.nextRevisiondate = new Date(Date.now() + 3*24*60*1000);
     await Question.findByIdAndUpdate(
         req.params.id,
-        req.body
+        req.body,
     );
+    res.redirect("/questions");
+});
+
+app.put("/revision-complete/:id", async(req,res)=>{
+    const foundQuestion = await Question.findById(req.params.id);
+    foundQuestion.lastRevised = new Date();
+    foundQuestion.nextRevisionDate = new Date(Date.now() + 3*24*60*60*1000
+    );
+    await foundQuestion.save();
     res.redirect("/questions");
 });
 
@@ -134,6 +209,7 @@ app.put("/edit/:id", async(req,res)=>{
 app.patch("/toggle/:id", async(req,res)=>{
     const foundQuestion = await Question.findById(req.params.id);
     foundQuestion.solved = !foundQuestion.solved;
+    foundQuestion.lastRevised = new Date();
     await foundQuestion.save();
     res.redirect("/questions");
 });

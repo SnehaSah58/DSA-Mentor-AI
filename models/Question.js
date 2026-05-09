@@ -9,8 +9,27 @@ const questionSchema = new mongoose.Schema({
     solved:{
     type : Boolean,
     default : false
-}
+    },
 
+    notes:{
+        type:String,
+        default:" "
+    },
+
+    revisionPriority:{
+        type:String,
+        default:"Low"
+    },
+
+    lastRevised:{
+        type:Date,
+        default:Date.now
+    },
+
+    nextRevisionDate:{
+        type:Date,
+        default:Date.now
+    }
 });
 
 module.exports = mongoose.model("Question", questionSchema);

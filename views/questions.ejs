@@ -12,7 +12,52 @@
 
 <body>
 
-    <h1>All DSA Questions</h1>
+    <h1>ALL  DSA  QUESTIONS</h1>
+
+        <h2>
+            🔥 Questions Due For Revision
+        </h2>
+
+        <% if(dueQuestions.length === 0){ %>
+            <p>No Revision Due 😎</p>
+        <% } 
+        else { %>
+            <% dueQuestions.forEach((q)=>{ %>
+            <div class="due-card">
+                <h3><%= q.title %></h3>
+                <p>
+                    Revision Date:
+                    <%= q.nextRevisionDate.toDateString() %>
+                </p>
+
+                <form
+                    action="/revision-complete/<%= q._id %>?_method=PUT" method="POST">
+                    <button type="submit">
+                        Revision Done ✅
+                    </button>
+                </form>
+            </div>
+            <% }) %>
+        <% } %>
+
+    <div class="dashboard">
+        <div class="dashboard-card">
+            <h2>Total</h2>
+            <h3><%= totalQuestions %></h3>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Solved</h2>
+            <h3><%= solvedCount %></h3>
+        </div>
+
+        <div class="dashboard-card">
+            <h2>Unsolved</h2>
+            <h3><%= unsolvedCount %></h3>
+        </div>
+
+    </div>
+
     <h3>
         Progress:
         <%= solvedCount %> / <%= totalQuestions %>
@@ -46,6 +91,14 @@
     </form>
 
         <br>
+
+        <a href="/questions/sort/priority">
+            <button>
+                Sort By Priority
+            </button>
+        </a>
+
+        <br><br>
 
     <a href="/questions/difficulty/Easy">
         <button>Easy</button>
@@ -100,11 +153,53 @@
                 <strong>Description:</strong>
                 <%= q.description %>
             </p>
+
+            <p>
+                <strong>lastRevised:</strong>
+                <%= q.lastRevised.toDateString() %>
+            </p>
+
+            <p>
+                <strong>nextRevisionDate:</strong>
+                <%= q.nextRevisionDate.toDateString() %>
+            </p>
+
+            <%
+                const today = new Date();
+                const revisionDate = new Date(q.nextRevisionDate);
+            %>
+
+            <% if(revisionDate <= today){ %>
+                <p class="revision-due">
+                    Revision Due 🔥
+                </p>
+            <% } 
+            else { %>
+                <p class="revision-scheduled">
+                    Revision Scheduled ✅
+                </p>
+            <% } %>
+            
+
+            <% if(q.notes && q.notes.trim() !== "") { %>
+                <p>
+                    <b>Notes:</b>
+                    <%= q.notes %>
+                </p>
+            <% } %>
+
+            <p>
+                <b>revisionPriority:</b>
+                <span class="priority-<%= q.revisionPriority.toLowerCase() %>">
+                    <%= q.revisionPriority %>
+                </span>
+            </p>
+
             <form action="/delete/<%= q._id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete</button>
             </form>
 
-            <br><br>
+            <br>
 
             <a href="/edit/<%= q._id %>">
                 <button> Edit </button>
