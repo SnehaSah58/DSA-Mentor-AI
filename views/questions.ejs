@@ -55,7 +55,169 @@
             <h2>Unsolved</h2>
             <h3><%= unsolvedCount %></h3>
         </div>
+    </div>
 
+    <h2>🎯 Set Topic Goal</h2>
+    <form action="/set-goal" method="POST">
+        <input
+        type="text"
+        name="topic"
+        placeholder="Enter Topic Name">
+        <input
+        type="number"
+        name="goalDays"
+        placeholder="Goal Days">
+        <button type="submit">
+            Set Goal
+        </button>
+
+    </form>
+
+    <h2>📌 Topic Goals</h2>
+    <% activeGoals.forEach((goal)=>{ %>
+    <div class="goal-card">
+        <h3>
+            🎯 <%= goal.topic %>
+        </h3>
+        <p>
+            Complete in:
+            <%= goal.goalDays %> days
+        </p>
+        <%
+            const topicQuestions =
+            allQuestions.filter(
+            (q)=>q.topic===goal.topic
+            );
+
+            const solvedQuestions =
+            topicQuestions.filter(
+            (q)=>q.solved
+            );
+
+            const remainingDays = Math.ceil(
+            (new Date(goal.endDate) - new Date())/(1000*60*60*24)
+            );
+        %>
+
+        <p>
+            Progress:
+            <%= solvedQuestions.length %> / <%= topicQuestions.length %>
+        </p>
+
+        <% if(
+            solvedQuestions.length === topicQuestions.length
+        ){ %>
+
+        <p class="goal-complete">
+            ✅ Goal Completed
+        </p>
+
+        <form
+            action="/complete-goal/<%= goal._id %>?_method=PUT"method="POST">
+            <button type="submit">
+                Archive Goal ✅
+            </button>
+        </form>
+
+        <form
+            action="/delete-goal/<%= goal._id %>?_method=DELETE"method="POST">
+            <button type="submit">
+                Remove Goal
+            </button>
+        </form>
+
+        <% } else if(remainingDays > 0){ %>
+        <p class="goal-pending">
+            ⏳ <%= remainingDays %>
+            days left
+        </p>
+
+        <% } else { %>
+        <p class="goal-overdue">
+            ❌ Goal Missed
+        </p>
+        <% } %>
+    </div>
+    <% }) %>
+
+    <h2>📁 Completed Goals</h2>
+    <% completedGoals.forEach((goal)=>{ %>
+    <div class="completed-goal-card">
+        <h3>
+            ✅ <%= goal.topic %>
+        </h3>
+    </div>
+    <% }) %>
+
+    <div class="streak-box">
+        🔥 <%= streakCount %> Question Streak
+
+    </div>
+
+    <div class="recommendation-box">
+        ⚠️ Practice More
+        <b><%= weakTopic %></b>
+        Questions
+    </div>
+
+    <div class="strong-topic-box">
+        🏆 Strongest Topic:
+        <b><%= strongTopic %></b>
+    </div>
+
+    <h2>📊 Topic Wise Progress</h2>
+    <div class="topic-stats">
+        <% for(let topic in topicStats){ %>
+            <div class="topic-card">
+                <h3>
+                    <% if(topic === "Array"){ %>
+                        📦
+                    <% } %>
+                    <% if(topic === "DP"){ %>
+                        🧠
+                    <% } %>
+                    <% if(topic === "Graph"){ %>
+                        🕸️
+                    <% } %>
+                    <% if(topic === "Tree"){ %>
+                        🌳
+                    <% } %>
+                    <% if(topic === "Linkedlist"){ %>
+                        🔗
+                    <% } %>
+                    <% if(topic === "Stack"){ %>
+                        📚
+                    <% } %>
+                    <% if(topic === "Queue"){ %>
+                        🚶
+                    <% } %>
+                    <% if(topic === "Slidingwindow"){ %>
+                        🪟
+                    <% } %>
+                    <% if(topic === "Heap"){ %>
+                        ⛰️
+                    <% } %>
+
+                    <% if(topic === "Design"){ %>
+                        🎨
+                    <% } %>
+
+                    <% if(topic === "String"){ %>
+                        🔤
+                    <% } %>
+
+                    <% if(topic === "Binarysearch"){ %>
+                        🔍
+                    <% } %>
+                    <%= topic %>
+
+                </h3>
+                <p>
+                    Solved:
+                    <%= topicStats[topic] %>
+                </p>
+            </div>
+        <% } %>
     </div>
 
     <h3>

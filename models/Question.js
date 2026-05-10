@@ -29,7 +29,7 @@ const questionSchema = new mongoose.Schema({
     nextRevisionDate:{
         type:Date,
         default:Date.now
-    }
+    },
 });
 
 module.exports = mongoose.model("Question", questionSchema);

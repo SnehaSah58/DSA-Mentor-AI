@@ -1,3 +1,4 @@
+const Goal = require("./models/Goal")
 const methodOverride = require("method-override");
 const Question = require("./models/Question");
 const mongoose = require("mongoose");
@@ -35,6 +36,41 @@ app.post("/add-Question",async(req,res)=>{
 
 app.get("/Questions",async(req,res)=>{
     const allQuestions = await Question.find();
+    const activeGoals = await Goal.find({
+    completed:false
+});
+
+const completedGoals = await Goal.find({
+    completed:true
+});
+    const topicStats = {};
+    allQuestions.forEach((q)=>{
+    if(!topicStats[q.topic]){
+        topicStats[q.topic] = 0;
+    }
+    if(q.solved){
+        topicStats[q.topic]++;
+    }
+});
+
+    let weakTopic = "";
+    let minimumSolved = Infinity;
+    for(let topic in topicStats){
+    if(topicStats[topic] < minimumSolved){
+        minimumSolved = topicStats[topic];
+        weakTopic = topic;
+    }
+}
+
+    let strongTopic = "";
+    let maximumSolved = -1;
+    for(let topic in topicStats){
+    if(topicStats[topic] > maximumSolved){
+        maximumSolved = topicStats[topic];
+        strongTopic = topic;
+    }
+}
+
     const solvedQuestions = await Question.find({
         solved:true
     });
@@ -60,6 +96,13 @@ const dueQuestions = allQuestions.filter((q)=>{
     <= today;
 });
 
+let streakCount = 0;
+allQuestions.forEach((q)=>{
+    if(q.solved){
+        streakCount++;
+    }
+});
+
     res.render("questions",{
         allQuestions,
         totalQuestions,
@@ -69,7 +112,13 @@ const dueQuestions = allQuestions.filter((q)=>{
         easyCount,
         mediumCount,
         hardCount,
-        dueQuestions
+        dueQuestions,
+        topicStats,
+        streakCount,
+        weakTopic,
+        strongTopic,
+        activeGoals,
+        completedGoals
     });
 });
 
@@ -183,7 +232,13 @@ app.get("/edit/:id", async(req,res)=>{
 app.delete("/delete/:id", async (req,res)=>{
     await Question.findByIdAndDelete(req.params.id);
     res.redirect("/questions");
+});
 
+app.delete("/delete-goal/:id", async(req,res)=>{
+    await Goal.findByIdAndDelete(
+        req.params.id
+    );
+    res.redirect("/questions");
 });
 
 app.put("/edit/:id", async(req,res)=>{
@@ -205,6 +260,26 @@ app.put("/revision-complete/:id", async(req,res)=>{
     res.redirect("/questions");
 });
 
+app.put("/complete-goal/:id", async(req,res)=>{
+    await Goal.findByIdAndUpdate(
+        req.params.id,
+        {
+            completed:true
+        }
+    );
+    res.redirect("/questions");
+});
+
+app.post("/set-goal", async(req,res)=>{
+    const endDate = new Date(Date.now() +req.body.goalDays * 24 * 60 * 60 * 1000
+    );
+    await Goal.create({
+        topic:req.body.topic,
+        goalDays:req.body.goalDays,
+        endDate:endDate
+    });
+    res.redirect("/questions");
+});
 
 app.patch("/toggle/:id", async(req,res)=>{
     const foundQuestion = await Question.findById(req.params.id);
