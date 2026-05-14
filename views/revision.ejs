@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+
+<title>
+
+Revision
+
+</title>
+
+<link rel="stylesheet"
+href="/public.css">
+
+</head>
+
+<body>
+
+
+
+<div class="navbar">
+
+<div class="logo">
+
+DSA Mentor AI 🚀
+
+</div>
+
+
+
+<div class="nav-links">
+
+<a href="/dashboard">
+
+Dashboard
+
+</a>
+
+
+
+<a href="/questions">
+
+Questions
+
+</a>
+
+
+
+<a href="/goals">
+
+Goals
+
+</a>
+
+
+
+<a href="/revision">
+
+Revision
+
+</a>
+
+
+
+<button
+class="logout-btn"
+
+onclick="openLogoutModal()"
+>
+
+Logout
+
+</button>
+
+<a
+href="/profile"
+
+class="profile-nav-icon"
+>
+
+<%= user.avatar %>
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div class="revision-heading">
+
+<h1>
+
+🔁 Revision Center
+
+</h1>
+
+
+
+<p>
+
+Manage your topic revisions smartly 😎🔥
+
+</p>
+
+</div>
+
+
+
+<div class="revision-form-container">
+
+<form
+action="/revision/add"
+method="POST"
+class="revision-form"
+>
+
+<select
+name="topic"
+required
+>
+
+<option value="">
+
+Select Topic
+
+</option>
+
+<option value="Array">
+
+Array
+
+</option>
+
+<option value="Graph">
+
+Graph
+
+</option>
+
+<option value="DP">
+
+DP
+
+</option>
+
+<option value="Stack">
+
+Stack
+
+</option>
+
+<option value="Heap">
+
+Heap
+
+</option>
+
+<option value="String">
+
+String
+
+</option>
+
+</select>
+
+
+
+<select
+name="priority"
+required
+>
+
+<option value="High">
+
+High Priority
+
+</option>
+
+<option value="Medium">
+
+Medium Priority
+
+</option>
+
+<option value="Low">
+
+Low Priority
+
+</option>
+
+</select>
+
+
+
+<input
+type="text"
+name="notes"
+placeholder="Revision Notes"
+required
+>
+
+
+
+<button type="submit">
+
+Add Revision 🔁
+
+</button>
+
+</form>
+
+</div>
+
+
+
+<div class="revision-container">
+
+<%
+
+revisions.forEach((r)=>{
+
+%>
+
+
+
+<div class="revision-topic-card">
+
+
+
+<h2>
+
+📚 <%= r.topic %>
+
+</h2>
+
+
+
+<p>
+
+Priority:
+
+<b>
+
+<%= r.priority %>
+
+</b>
+
+</p>
+
+
+
+<p>
+
+📝 Notes:
+
+<%= r.notes %>
+
+</p>
+
+
+
+<p>
+
+📅 Last Revised:
+
+<%= r.lastRevisedDate
+.toDateString()
+
+%>
+
+</p>
+
+<p>
+
+⏳ Next Revision:
+
+<%= r.nextRevisionDate
+? r.nextRevisionDate
+.toDateString()
+: "Not Scheduled"
+
+%>
+</p>
+
+<form
+action="/revision/update/<%= r._id %>"
+method="POST"
+>
+
+<select
+name="priority"
+>
+
+<option value="High">
+
+High
+
+</option>
+
+<option value="Medium">
+
+Medium
+
+</option>
+
+<option value="Low">
+
+Low
+
+</option>
+
+</select>
+
+
+
+<button type="submit">
+
+Update Priority 😎
+
+</button>
+
+</form>
+
+<form
+action="/revision/done/<%= r._id %>"
+method="POST"
+>
+
+<button type="submit">
+
+Revision Done ✅
+
+</button>
+
+</form>
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+<div
+id="logoutModal"
+
+class="logout-modal"
+>
+
+<div class="logout-modal-content">
+
+<h2>
+
+Are you sure? 😭
+
+</h2>
+
+
+
+<p>
+
+Do you really want
+to logout?
+
+</p>
+
+
+
+<div class="logout-buttons">
+
+<a href="/logout">
+
+<button class="confirm-logout">
+
+Yes Logout
+
+</button>
+
+</a>
+
+
+
+<button
+class="cancel-logout"
+
+onclick="closeLogoutModal()"
+>
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+function openLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "flex";
+
+}
+
+function closeLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "none";
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>

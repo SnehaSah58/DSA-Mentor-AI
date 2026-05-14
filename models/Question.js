@@ -30,6 +30,16 @@ const questionSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+
+    leetcodeLink:{
+    type:String,
+    default:""
+    },
+
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    }
 });
 
 module.exports = mongoose.model("Question", questionSchema);

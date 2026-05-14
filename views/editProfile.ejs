@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+
+<title>Edit Profile</title>
+
+<link rel="stylesheet"href="/public.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+
+DSA Mentor AI 🚀
+
+</div>
+
+
+<div class="nav-links">
+
+<a href="/dashboard">
+
+Dashboard
+
+</a>
+
+
+<a href="/questions">
+
+Questions
+
+</a>
+
+
+<a href="/goals">
+
+Goals
+
+</a>
+
+
+<a href="/revision">
+Revision
+
+</a>
+
+
+<button
+class="logout-btn"
+
+onclick="openLogoutModal()"
+>
+
+Logout
+
+</button>
+
+
+
+<a
+href="/profile"
+
+class="profile-nav-icon"
+>
+
+<%= user.avatar %>
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div class="edit-profile-container">
+
+
+
+<div class="edit-profile-card">
+
+
+<h1>
+
+Edit Profile 😎🔥
+
+</h1>
+
+
+<form
+action="/profile/edit"
+method="POST"
+>
+
+
+
+<label>
+
+Username
+
+</label>
+
+
+
+<input
+type="text"
+name="username"
+value="<%= user.username %>"
+required
+>
+
+<label>
+
+Email
+
+</label>
+
+<input
+type="email"
+name="email"
+value="<%= user.email %>"
+required
+>
+
+<label>
+
+Choose Avatar 😎
+
+</label>
+
+<select
+name="avatar"
+>
+
+<option value="👩‍💻">
+
+👩‍💻
+
+</option>
+
+<option value="🧑‍🚀">
+
+🧑‍🚀
+
+</option>
+
+<option value="😎">
+
+😎
+
+</option>
+
+<option value="🔥">
+
+🔥
+
+</option>
+
+<option value="🚀">
+
+🚀
+
+</option>
+
+</select>
+
+
+<button type="submit">
+
+Save Changes 🚀
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div
+id="logoutModal"
+
+class="logout-modal"
+>
+
+<div class="logout-modal-content">
+
+<h2>
+
+Are you sure? 😭
+
+</h2>
+
+<p>
+
+Do you really want
+to logout?
+
+</p>
+
+<div class="logout-buttons">
+
+<a href="/logout">
+
+<button class="confirm-logout">
+
+Yes Logout
+
+</button>
+
+</a>
+
+<button
+class="cancel-logout"
+
+onclick="closeLogoutModal()"
+>
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function openLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "flex";
+
+}
+
+function closeLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "none";
+
+}
+
+</script>
+
+</body>
+
+</html>

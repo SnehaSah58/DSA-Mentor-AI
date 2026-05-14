@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+
+<title>
+
+Profile
+
+</title>
+
+<link rel="stylesheet"
+href="/public.css">
+
+</head>
+
+<body>
+
+
+
+<div class="navbar">
+
+<div class="logo">
+
+DSA Mentor AI 🚀
+
+</div>
+
+
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+
+
+<a href="/questions">
+
+Questions
+
+</a>
+
+
+
+<a href="/goals">
+
+Goals
+
+</a>
+
+
+
+<a href="/revision">
+
+Revision
+
+</a>
+
+
+
+<a href="/profile">
+
+Profile
+
+</a>
+
+
+
+<button
+class="logout-btn"
+
+onclick="openLogoutModal()"
+>
+
+Logout
+
+</button>
+
+<a
+href="/profile"
+
+class="profile-nav-icon"
+>
+
+<%= user.avatar %>
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div class="profile-container">
+
+
+
+<div class="profile-card">
+
+
+
+<div class="profile-avatar">
+
+👩‍💻
+
+</div>
+
+
+
+<h1>
+
+<%= user.username %>
+
+</h1>
+
+
+
+<p>
+
+<%= user.email %>
+
+</p>
+
+<a
+href="/profile/edit"
+
+class="edit-profile-btn"
+>
+
+Edit Profile ✏️
+
+</a>
+
+<p>
+
+Joined:
+
+<%= user.createdAt
+? user.createdAt
+.toDateString()
+
+: "Recently"
+
+%>
+
+</p>
+
+</div>
+
+
+
+<div class="profile-stats">
+
+
+
+<div class="profile-stat-card">
+
+<h2>
+
+✅ Solved
+
+</h2>
+
+
+
+<p>
+
+<%= solvedCount %>
+
+</p>
+
+</div>
+
+
+
+<div class="profile-stat-card">
+
+<h2>
+
+❌ Unsolved
+
+</h2>
+
+
+
+<p>
+
+<%= unsolvedCount %>
+
+</p>
+
+</div>
+
+
+
+<div class="profile-stat-card">
+
+<h2>
+
+🔥 Streak
+
+</h2>
+
+
+
+<p>
+
+<%= streakCount %>
+
+</p>
+
+</div>
+
+
+
+<div class="profile-stat-card">
+
+<h2>
+
+💪 Strong Topic
+
+</h2>
+
+
+
+<p>
+
+<%= strongTopic %>
+
+</p>
+
+</div>
+
+
+
+<div class="profile-stat-card">
+
+<h2>
+
+📉 Weak Topic
+
+</h2>
+
+
+
+<p>
+
+<%= weakTopic %>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+id="logoutModal"
+
+class="logout-modal"
+>
+
+<div class="logout-modal-content">
+
+<h2>
+
+Are you sure? 😭
+
+</h2>
+
+
+
+<p>
+
+Do you really want
+to logout?
+
+</p>
+
+
+
+<div class="logout-buttons">
+
+<a href="/logout">
+
+<button class="confirm-logout">
+
+Yes Logout
+
+</button>
+
+</a>
+
+<button
+class="cancel-logout"
+
+onclick="closeLogoutModal()"
+>
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function openLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "flex";
+
+}
+
+
+function closeLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "none";
+
+}
+
+</script>
+
+</body>
+
+</html>

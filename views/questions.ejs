@@ -1,374 +1,872 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>All Questions</title>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+<title>Questions</title>
 
-    <link rel="stylesheet" href="/public.css">
+<link rel="stylesheet"href="/public.css">
 
 </head>
 
+<button
+
+class="chatbot-toggle"
+
+onclick="openChatbot()"
+
+>
+
+🤖 AI Mentor
+
+</button>
+
+<div
+
+id="chatbotBox"
+
+class="chatbot-box"
+
+>
+
+<div class="chatbot-header">
+
+🤖 AI DSA Mentor
+
+</div>
+
+
+
+<div
+
+id="chatMessages"
+
+class="chat-messages"
+
+>
+
+</div>
+
+
+
+<div class="chat-input-area">
+
+<input
+
+type="text"
+
+id="userMessage"
+
+placeholder="Ask DSA doubts..."
+
+>
+
+
+
+<button onclick="sendMessage()">
+
+Send
+
+</button>
+
+</div>
+
+</div>
+
 <body>
 
-    <h1>ALL  DSA  QUESTIONS</h1>
 
-        <h2>
-            🔥 Questions Due For Revision
-        </h2>
+<div class="navbar">
+<div class="logo">
+DSA Mentor AI 🚀
 
-        <% if(dueQuestions.length === 0){ %>
-            <p>No Revision Due 😎</p>
-        <% } 
-        else { %>
-            <% dueQuestions.forEach((q)=>{ %>
-            <div class="due-card">
-                <h3><%= q.title %></h3>
-                <p>
-                    Revision Date:
-                    <%= q.nextRevisionDate.toDateString() %>
-                </p>
+</div>
+   
 
-                <form
-                    action="/revision-complete/<%= q._id %>?_method=PUT" method="POST">
-                    <button type="submit">
-                        Revision Done ✅
-                    </button>
-                </form>
-            </div>
-            <% }) %>
-        <% } %>
+<div class="nav-links">
 
-    <div class="dashboard">
-        <div class="dashboard-card">
-            <h2>Total</h2>
-            <h3><%= totalQuestions %></h3>
-        </div>
+<a href="/dashboard">
+Dashboard
+</a>
 
-        <div class="dashboard-card">
-            <h2>Solved</h2>
-            <h3><%= solvedCount %></h3>
-        </div>
+<a href="/questions">
+Questions
+</a>
 
-        <div class="dashboard-card">
-            <h2>Unsolved</h2>
-            <h3><%= unsolvedCount %></h3>
-        </div>
-    </div>
+<a href="/goals">
+Goals
+</a>
 
-    <h2>🎯 Set Topic Goal</h2>
-    <form action="/set-goal" method="POST">
-        <input
-        type="text"
-        name="topic"
-        placeholder="Enter Topic Name">
-        <input
-        type="number"
-        name="goalDays"
-        placeholder="Goal Days">
-        <button type="submit">
-            Set Goal
-        </button>
+<a href="/revision">
+Revision
+</a>
 
-    </form>
+<button
+class="logout-btn"
+onclick="openLogoutModal()">
+Logout
+</button>
 
-    <h2>📌 Topic Goals</h2>
-    <% activeGoals.forEach((goal)=>{ %>
-    <div class="goal-card">
-        <h3>
-            🎯 <%= goal.topic %>
-        </h3>
-        <p>
-            Complete in:
-            <%= goal.goalDays %> days
-        </p>
-        <%
-            const topicQuestions =
-            allQuestions.filter(
-            (q)=>q.topic===goal.topic
-            );
+<a
+href="/profile"
+class="profile-nav-icon"
+>
+<%= user.avatar %>
+</a>
 
-            const solvedQuestions =
-            topicQuestions.filter(
-            (q)=>q.solved
-            );
+</div>
 
-            const remainingDays = Math.ceil(
-            (new Date(goal.endDate) - new Date())/(1000*60*60*24)
-            );
-        %>
+</div>
 
-        <p>
-            Progress:
-            <%= solvedQuestions.length %> / <%= topicQuestions.length %>
-        </p>
 
-        <% if(
-            solvedQuestions.length === topicQuestions.length
-        ){ %>
 
-        <p class="goal-complete">
-            ✅ Goal Completed
-        </p>
+<div class="questions-heading">
 
-        <form
-            action="/complete-goal/<%= goal._id %>?_method=PUT"method="POST">
-            <button type="submit">
-                Archive Goal ✅
-            </button>
-        </form>
+<h1>
 
-        <form
-            action="/delete-goal/<%= goal._id %>?_method=DELETE"method="POST">
-            <button type="submit">
-                Remove Goal
-            </button>
-        </form>
+📚  Study DSA
 
-        <% } else if(remainingDays > 0){ %>
-        <p class="goal-pending">
-            ⏳ <%= remainingDays %>
-            days left
-        </p>
+</h1>
 
-        <% } else { %>
-        <p class="goal-overdue">
-            ❌ Goal Missed
-        </p>
-        <% } %>
-    </div>
-    <% }) %>
+<p>
 
-    <h2>📁 Completed Goals</h2>
-    <% completedGoals.forEach((goal)=>{ %>
-    <div class="completed-goal-card">
-        <h3>
-            ✅ <%= goal.topic %>
-        </h3>
-    </div>
-    <% }) %>
+Practice consistently
+and track your progress 😎🔥
 
-    <div class="streak-box">
-        🔥 <%= streakCount %> Question Streak
+</p>
 
-    </div>
+</div>
 
-    <div class="recommendation-box">
-        ⚠️ Practice More
-        <b><%= weakTopic %></b>
-        Questions
-    </div>
 
-    <div class="strong-topic-box">
-        🏆 Strongest Topic:
-        <b><%= strongTopic %></b>
-    </div>
 
-    <h2>📊 Topic Wise Progress</h2>
-    <div class="topic-stats">
-        <% for(let topic in topicStats){ %>
-            <div class="topic-card">
-                <h3>
-                    <% if(topic === "Array"){ %>
-                        📦
-                    <% } %>
-                    <% if(topic === "DP"){ %>
-                        🧠
-                    <% } %>
-                    <% if(topic === "Graph"){ %>
-                        🕸️
-                    <% } %>
-                    <% if(topic === "Tree"){ %>
-                        🌳
-                    <% } %>
-                    <% if(topic === "Linkedlist"){ %>
-                        🔗
-                    <% } %>
-                    <% if(topic === "Stack"){ %>
-                        📚
-                    <% } %>
-                    <% if(topic === "Queue"){ %>
-                        🚶
-                    <% } %>
-                    <% if(topic === "Slidingwindow"){ %>
-                        🪟
-                    <% } %>
-                    <% if(topic === "Heap"){ %>
-                        ⛰️
-                    <% } %>
+<div class="search-section">
 
-                    <% if(topic === "Design"){ %>
-                        🎨
-                    <% } %>
+<form
+action="/questions/search"
+method="GET"
+>
 
-                    <% if(topic === "String"){ %>
-                        🔤
-                    <% } %>
+<input
+type="text"
+name="topic"
+placeholder="Search by Topic"
+>
 
-                    <% if(topic === "Binarysearch"){ %>
-                        🔍
-                    <% } %>
-                    <%= topic %>
 
-                </h3>
-                <p>
-                    Solved:
-                    <%= topicStats[topic] %>
-                </p>
-            </div>
-        <% } %>
-    </div>
 
-    <h3>
-        Progress:
-        <%= solvedCount %> / <%= totalQuestions %>
-    </h3>
-    <h2>
-        <%= progressPercentage %>% Completed
-    </h2>
+<button type="submit">
 
-    <div class="progress-bar">
-        <div 
-            class="progress-fill"
-            style="width: <%= progressPercentage %>%">
-        </div>
-    </div>
+Search
 
-    <br>
+</button>
 
-    <div class="difficulty-counts">
-        <h3>Easy: <%= easyCount %></h3>
-        <h3>Medium: <%= mediumCount %></h3>
-        <h3>Hard: <%= hardCount %></h3>
-    </div>
+</form>
 
-    <br><br>
+</div>
 
-    <form action="/questions/search" method="get">
-        <input type="text"
-        name="topic"
-        placeholder="Search by topic">
-        <button type="submit"> Search</button>
-    </form>
 
-        <br>
+<h2 class="topic-title">
 
-        <a href="/questions/sort/priority">
-            <button>
-                Sort By Priority
-            </button>
-        </a>
+📊 Topic Wise Progress
 
-        <br><br>
+</h2>
 
-    <a href="/questions/difficulty/Easy">
-        <button>Easy</button>
-    </a>
 
-    <a href="/questions/difficulty/Medium">
-        <button>Medium</button>
-    </a>
+<div class="topic-stats">
 
-    <a href="/questions/difficulty/Hard">
-        <button>Hard</button>
-    </a>
+<% for(let topic in topicStats){ %>
 
-    <a href="/questions">
-        <button>All</button>
-    </a>
+<div class="topic-card">
 
-    <br><br>
+<h3>
 
-    <% allQuestions.forEach((q)=> { %>
+<%= topic %>
 
-        <div class="question-card <%= q.solved ? 'solved-card' : '' %>">
+</h3>
 
-            <h2><%= q.title %></h2>
+<button
 
-            <p>
-                <strong>Difficulty:</strong>
-                <%= q.difficulty %>
-            </p>
+class="topic-ai-btn"
 
-            <p>
-                <strong>Topic:</strong>
-                <%= q.topic %>
-            </p>
+onclick="generateNotes('<%= topic %>')"
 
-            <P>
-                <strong>Status:</strong>
-                <% if(q.solved){ %>
-                solved
-                <% } else { %>
-                Unsolved
-                <% } %>
-            </P>
+>
 
-            <form action="/toggle/<%= q._id %>?_method=PATCH" method="POST">
-                <button type="submit">
-                <%= q.solved ? "Mark as Unsolved" : "Mark as Solved"%>
-                </button>
-            </form>
+AI Notes 😎🔥
+</button>
 
-            <p>
-                <strong>Description:</strong>
-                <%= q.description %>
-            </p>
+<button
 
-            <p>
-                <strong>lastRevised:</strong>
-                <%= q.lastRevised.toDateString() %>
-            </p>
+class="roadmap-btn"
 
-            <p>
-                <strong>nextRevisionDate:</strong>
-                <%= q.nextRevisionDate.toDateString() %>
-            </p>
+onclick="generateRoadmap('<%= topic %>')"
 
-            <%
-                const today = new Date();
-                const revisionDate = new Date(q.nextRevisionDate);
-            %>
+>
 
-            <% if(revisionDate <= today){ %>
-                <p class="revision-due">
-                    Revision Due 🔥
-                </p>
-            <% } 
-            else { %>
-                <p class="revision-scheduled">
-                    Revision Scheduled ✅
-                </p>
-            <% } %>
-            
+🛣️ AI Roadmap
 
-            <% if(q.notes && q.notes.trim() !== "") { %>
-                <p>
-                    <b>Notes:</b>
-                    <%= q.notes %>
-                </p>
-            <% } %>
+</button>
 
-            <p>
-                <b>revisionPriority:</b>
-                <span class="priority-<%= q.revisionPriority.toLowerCase() %>">
-                    <%= q.revisionPriority %>
-                </span>
-            </p>
 
-            <form action="/delete/<%= q._id %>?_method=DELETE" method="POST">
-                <button type="submit">Delete</button>
-            </form>
+<p>
 
-            <br>
+<%= topicStats[topic].solved %>
 
-            <a href="/edit/<%= q._id %>">
-                <button> Edit </button>
-            </a>
-        </div>
+/
 
-    <% }) %>
+<%= topicStats[topic].total %>
+
+Solved
+
+</p>
+
+</div>
+
+<% } %>
+
+</div>
+
+<h2 class="all-questions-heading">
+📚 All Questions
+</h2>
+
+<div class="questions-container">
+
+<% allQuestions.forEach((q)=>{ %>
+    <% const progress = progressMap[q.id.toString()];
+    %>
+
+<div class="question-card
+<% if(
+progress && progress.solved
+){ %>
+
+solved-card
+
+<% } %>
+
+">
+
+<h2>
+<%= q.title %>
+</h2>
+
+
+
+<p class="
+difficulty-badge
+
+<%= q.difficulty.toLowerCase() %>
+">
+
+<%= q.difficulty %>
+
+</p>
+
+
+<p>
+
+📌 Topic:
+
+<b>
+
+<%= q.topic %>
+
+</b>
+
+</p>
+
+
+<p>
+
+Status:
+
+<% if(
+progress &&
+progress.solved
+){ %>
+
+<span class="solved-text">
+
+Solved ✅
+
+</span>
+
+<% } else { %>
+
+<span class="unsolved-text">
+
+Unsolved ❌
+
+</span>
+
+<% } %>
+
+</p>
+
+
+<form
+action="/toggle/<%= q._id %>?_method=PATCH"
+method="POST"
+>
+
+<button type="submit">
+
+<% if(
+progress &&
+progress.solved
+){ %>
+
+Mark as Unsolved
+
+<% } else { %>
+
+Mark as Solved
+
+<% } %>
+
+</button>
+
+</form>
+
+
+<br>
+
+
+<% if(q.leetcodeLink){ %>
+
+<a
+href="<%= q.leetcodeLink %>"
+target="_blank"
+>
+
+<button>
+
+Solve on LeetCode 🔗
+
+</button>
+
+</a>
+
+<% } %>
+
+<br>
+
+<button
+
+class="ai-hint-btn"
+
+onclick='getHint(
+
+`<%= q.title %>`,
+
+`<%= q.description %>`,
+
+`<%= q.topic %>`
+
+)'
+
+>
+
+💡 AI Hint
+
+</button>
+
+<div class="description-box">
+
+<h3>
+
+📝 Description
+
+</h3>
+
+
+<p class="question-description">
+
+<%= q.description %>
+
+</p>
+
+</div>
+
+
+</div>
+
+<% }) %>
+
+</div>
+
+<div
+id="logoutModal"
+
+class="logout-modal"
+>
+
+<div class="logout-modal-content">
+
+<h2>
+
+Are you sure? 😭
+
+</h2>
+
+
+<p>
+
+Do you really want
+to logout?
+
+</p>
+
+
+
+<div class="logout-buttons">
+
+<a href="/logout">
+
+<button class="confirm-logout">
+
+Yes Logout
+
+</button>
+
+</a>
+
+
+
+<button
+class="cancel-logout"
+
+onclick="closeLogoutModal()"
+>
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function openLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "flex";
+
+}
+
+function closeLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "none";
+
+}
+
+</script>
+
+<div
+id="notesModal"
+class="notes-modal">
+<div class="notes-content">
+<h2>
+AI Notes 😎🔥
+</h2>
+
+<p id="notesText">
+Loading...
+</p>
+
+<button
+
+onclick="closeNotes()"
+
+>
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+async function generateNotes(topic){
+
+    document.getElementById(
+    "notesModal"
+    ).style.display = "flex";
+    const response =
+    await fetch(
+        "/ai-notes",
+
+        {
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                topic
+
+            })
+
+        }
+
+    );
+
+
+
+    const data =
+    await response.json();
+
+    document.getElementById(
+    "notesText"
+    ).innerText = data.notes;
+
+}
+
+
+function closeNotes(){
+
+    document.getElementById(
+    "notesModal"
+    ).style.display = "none";
+
+}
+
+</script>
+
+<div
+
+id="hintModal"
+
+class="notes-modal"
+
+>
+
+<div class="notes-content">
+
+<h2>
+
+💡 AI Hint
+
+</h2>
+
+
+
+<p id="hintText">
+
+Loading...
+
+</p>
+
+
+
+<button
+
+onclick="closeHint()"
+
+>
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+async function getHint(
+
+title,
+
+description,
+
+topic
+
+){
+
+    document.getElementById(
+    "hintModal"
+    ).style.display = "flex";
+
+
+
+    const response =
+    await fetch(
+
+        "/ai-hint",
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                title,
+
+                description,
+
+                topic
+
+            })
+
+        }
+
+    );
+
+
+
+    const data =
+    await response.json();
+
+
+
+    document.getElementById(
+    "hintText"
+    ).innerText = data.hint;
+
+}
+
+
+
+function closeHint(){
+
+    document.getElementById(
+    "hintModal"
+    ).style.display = "none";
+
+}
+
+</script>
+
+<script>
+
+function openChatbot(){
+
+    const box =
+    document.getElementById(
+    "chatbotBox"
+    );
+
+
+
+    if(box.style.display==="flex"){
+
+        box.style.display="none";
+
+    }
+
+    else{
+
+        box.style.display="flex";
+
+    }
+
+}
+
+
+
+async function sendMessage(){
+
+    const input =
+    document.getElementById(
+    "userMessage"
+    );
+
+
+
+    const message =
+    input.value;
+
+
+
+    if(!message) return;
+
+
+
+    const chatMessages =
+    document.getElementById(
+    "chatMessages"
+    );
+
+
+
+    chatMessages.innerHTML +=
+
+    `<div class="user-msg">
+    ${message}
+    </div>`;
+
+
+
+    input.value = "";
+
+
+
+    const response =
+    await fetch(
+
+        "/ai-chat",
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                message
+
+            })
+
+        }
+
+    );
+
+
+
+    const data =
+    await response.json();
+
+
+
+    chatMessages.innerHTML +=
+
+    `<div class="ai-msg">
+    ${data.reply}
+    </div>`;
+
+}
+
+</script>
+
+<div
+
+id="roadmapModal"
+
+class="notes-modal"
+
+>
+
+<div class="notes-content">
+
+<h2>
+
+🛣️ AI Roadmap
+
+</h2>
+
+
+
+<p id="roadmapText">
+
+Loading...
+
+</p>
+
+
+
+<button
+
+onclick="closeRoadmap()"
+
+>
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+async function generateRoadmap(topic){
+
+    document.getElementById(
+    "roadmapModal"
+    ).style.display = "flex";
+
+
+
+    const response =
+    await fetch(
+
+        "/ai-roadmap",
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                topic
+
+            })
+
+        }
+
+    );
+
+
+
+    const data =
+    await response.json();
+
+
+
+    document.getElementById(
+    "roadmapText"
+    ).innerText = data.roadmap;
+
+}
+
+
+
+function closeRoadmap(){
+
+    document.getElementById(
+    "roadmapModal"
+    ).style.display = "none";
+
+}
+
+</script>
 
 </body>
+
 </html>

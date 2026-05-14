@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+
+<title>
+
+Dashboard
+
+</title>
+
+<link rel="stylesheet"
+href="/public.css">
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="navbar">
+
+    <div class="logo">
+        DSA MENTOR AI 🚀
+    </div>
+
+    
+
+<div class="nav-links">
+
+<a href="/dashboard">
+
+Dashboard
+
+</a>
+
+
+
+<a href="/questions">
+
+Questions
+
+</a>
+
+
+
+<a href="/goals">
+
+Goals
+
+</a>
+
+
+
+<a href="/revision">
+
+Revision
+
+</a>
+
+
+
+<button
+class="logout-btn"
+onclick="openLogoutModal()"
+>
+Logout
+
+</button>
+
+<a
+href="/profile"
+
+class="profile-nav-icon"
+>
+
+<%= user.avatar %>
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div class="dashboard-heading">
+
+<h1>
+
+Welcome to your
+DSA Mentor AI 😎🔥
+
+</h1>
+
+</div>
+
+
+
+<div class="dashboard-container">
+
+
+
+<div class="big-dashboard-card">
+
+<h2>
+
+📚 Total Questions
+
+</h2>
+
+<h1>
+
+<%= totalQuestions %>
+
+</h1>
+
+</div>
+
+
+
+<div class="small-cards-row">
+
+
+
+<div class="solved-card-ui">
+
+<h2>
+
+✅ Solved
+
+</h2>
+
+<h1>
+
+<%= solvedCount %>
+
+</h1>
+
+</div>
+
+
+
+<div class="unsolved-card-ui">
+
+<h2>
+
+❌ Unsolved
+
+</h2>
+
+<h1>
+
+<%= unsolvedCount %>
+
+</h1>
+
+</div>
+
+</div>
+
+
+
+<div class="streak-card">
+
+<h2>
+
+🔥 Current Streak
+
+</h2>
+
+<h1>
+
+<%= streakCount %>
+
+</h1>
+
+</div>
+
+
+
+<div class="topic-cards-row">
+
+
+
+<div class="strong-topic-card">
+
+<h2>
+
+🏆 Strong Topic
+
+</h2>
+
+<h1>
+
+<%= strongTopic %>
+
+</h1>
+
+</div>
+
+
+
+<div class="weak-topic-card">
+
+<h2>
+
+⚠ Weak Topic
+
+</h2>
+
+<h1>
+
+<%= weakTopic %>
+
+</h1>
+
+</div>
+
+</div>
+
+</div>
+
+    <br><br>
+
+<div class="progress-section">
+
+<h2>
+
+Overall Progress 🚀
+
+</h2>
+
+
+
+<div class="progress-bar">
+
+<div
+class="progress-fill"
+
+style="
+width:<%= progressPercentage %>%;
+">%
+
+</div>
+
+</div>
+
+
+
+<p>
+
+<%= progressPercentage %>%
+Completed
+
+</p>
+
+</div>
+
+    <br>
+
+<h2 class="topic-heading">
+
+📊 Topic Wise Progress
+
+</h2>
+
+
+
+<div class="topic-stats">
+
+<% for(let topic in topicStats){ %>
+
+<div class="topic-card">
+
+<h3>
+
+<%= topic %>
+
+</h3>
+
+
+
+<p>
+
+<%= topicStats[topic].solved %>
+
+/
+
+<%= topicStats[topic].total %>
+
+Solved
+
+</p>
+
+</div>
+
+<% } %>
+
+</div>
+
+
+<div
+id="logoutModal"
+
+class="logout-modal"
+>
+
+<div class="logout-modal-content">
+
+<h2>
+
+Are you sure? 😭
+
+</h2>
+
+
+
+<p>
+
+Do you really want
+to logout?
+
+</p>
+
+
+
+<div class="logout-buttons">
+
+<a href="/logout">
+
+<button class="confirm-logout">
+
+Yes Logout
+
+</button>
+
+</a>
+
+
+
+<button
+class="cancel-logout"
+
+onclick="closeLogoutModal()"
+>
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function openLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "flex";
+
+}
+
+
+
+function closeLogoutModal(){
+
+document.getElementById(
+"logoutModal"
+).style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
