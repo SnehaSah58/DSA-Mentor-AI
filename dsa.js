@@ -44,9 +44,9 @@ require("express-session");
 const User =
 require("./models/User");
 
-mongoose.connect("mongodb://127.0.0.1:27017/dsaMentor")
-.then(() => console.log("MongoDB Connected"))
-.catch((err) => console.log(err));
+mongoose.connect(process.env.MONGO_URL)
+.then(()=> console.log("MongoDB Atlas Connected 😎"))
+.catch((err)=> console.log(err));
 
 app.set("view engine" , "ejs");
 
@@ -1806,6 +1806,8 @@ async(req,res)=>{
     );
 });
 
-app.listen(3000,()=>{
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, ()=>{
     console.log("Server Started");
 });
