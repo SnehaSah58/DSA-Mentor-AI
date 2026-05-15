@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+AI Mock Interview
+
+</title>
+
+<link rel="stylesheet"
+href="/public.css">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+
+DSA Mentor AI 🚀
+
+</div>
+
+<div class="nav-links">
+
+<a href="/dashboard">
+Dashboard
+</a>
+
+<a href="/questions">
+Questions
+</a>
+
+<a href="/mock-interview">
+Mock Interview
+</a>
+
+</div>
+
+</div>
+
+<div class="mock-container">
+
+<h1>
+
+🎤 AI Mock Interview
+
+</h1>
+
+<p>
+
+Practice interview questions with AI 😎🔥
+
+</p>
+
+<div class="mock-card">
+
+<h2>
+
+Tell me about yourself
+
+</h2>
+
+<textarea
+
+id="answer"
+
+placeholder="Write your answer here..."
+
+></textarea>
+
+<button
+onclick="checkAnswer()"
+>
+
+Get AI Feedback 🚀
+
+</button>
+
+<p id="feedback">
+
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+async function checkAnswer(){
+
+const ans = document.getElementById("answer").value;
+
+document.getElementById("feedback").innerText =
+"Loading... 😎";
+
+const response = await fetch("/mock-feedback",
+{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+answer:ans
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById(
+"feedback"
+).innerText =
+data.feedback;
+
+}
+
+</script>
+
+</body>
+
+</html>

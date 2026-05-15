@@ -784,6 +784,68 @@ function isLoggedIn(req,res,next){
 }
 
 
+app.get("/mock-interview",
+
+(req,res)=>{
+
+    res.render(
+
+        "mockInterview"
+
+    );
+
+});
+
+app.get("/mock-question",
+async(req,res)=>{
+
+try{
+    const model =
+    genAI.getGenerativeModel({
+        model:"gemini-2.5-flash"
+
+    });
+
+    const result =
+    await model.generateContent(
+
+`Generate one DSA interview question.
+
+Rules:
+- medium difficulty
+- beginner friendly
+- no answer
+- only question`
+
+    );
+
+    const response =
+    await result.response;
+
+    const text =
+    response.text();
+
+    res.json({
+
+        question:text
+
+    });
+
+}
+
+catch(err){
+
+    console.log(err);
+    res.json({
+
+        question:
+        "Failed to load question 😭"
+
+    });
+}
+
+});
+
 app.get("/revision",
 
 isLoggedIn,
@@ -988,6 +1050,65 @@ app.put("/complete-goal/:id", async(req,res)=>{
 });
 
 
+app.post("/evaluate-answer",
+
+async(req,res)=>{
+
+try{
+
+    const question =
+    req.body.question;
+
+    const answer =
+    req.body.answer;
+
+
+
+    const model =
+    genAI.getGenerativeModel({
+        model:"gemini-2.5-flash"
+    });
+    const result =
+    await model.generateContent(
+
+`You are an AI interviewer.
+
+Question:
+${question}
+
+User Answer:
+${answer}
+
+Evaluate the answer.
+
+Give:
+1. strengths
+2. mistakes
+3. improvements
+4. rating out of 10
+
+Keep feedback beginner friendly.`
+    );
+    const response =
+    await result.response;
+    const text =
+    response.text();
+    res.json({
+        feedback:text
+    });
+
+}
+
+catch(err){
+    console.log(err);
+    res.json({
+        feedback:
+        "Evaluation failed 😭"
+    });
+}
+
+});
+
 app.post("/ai-notes", async(req,res)=>{
 console.log(process.env.GEMINI_API_KEY);
 try{
@@ -1034,15 +1155,14 @@ catch(err){
         notes:"AI Notes failed 😭"
 
     });
-
 }
 
 });
 
 
-app.post(
 
-"/ai-hint",
+
+app.post("/ai-hint",
 
 async(req,res)=>{
 
@@ -1063,8 +1183,6 @@ try{
         model:"gemini-2.5-flash"
 
     });
-
-
 
     const result =
     await model.generateContent(
@@ -1090,17 +1208,11 @@ Rules:
 
     );
 
-
-
     const response =
     await result.response;
 
-
-
     const text =
     response.text();
-
-
 
     res.json({
 
@@ -1120,33 +1232,23 @@ catch(err){
         "AI Hint failed 😭"
 
     });
-
 }
-
 });
 
 
-app.post(
-
-"/ai-chat",
+app.post("/ai-chat",
 
 async(req,res)=>{
 
 try{
-
     const userMessage =
     req.body.message;
 
-
-
     const model =
     genAI.getGenerativeModel({
-
         model:"gemini-2.5-flash"
 
     });
-
-
 
     const result =
     await model.generateContent(
@@ -1165,48 +1267,53 @@ Rules:
 - DSA related only`
 
     );
-
-
-
     const response =
     await result.response;
-
-
-
     const text =
     response.text();
-
-
-
     res.json({
-
         reply:text
-
     });
 
 }
 
 catch(err){
-
     console.log(err);
-
-
-
     res.json({
-
         reply:
         "AI Mentor failed 😭"
-
     });
-
 }
-
 });
 
 
-app.post(
+app.post("/mock-feedback",
+async(req,res)=>{
+try{
+const answer = req.body.answer;
+const model = genAI.getGenerativeModel({
+model:"gemini-2.5-flash"
+});
+const result = await model.generateContent(
+`Give interview feedback for this answer:
+${answer}`
+);
+const response = await result.response;
+const text = response.text();
+res.json({
+feedback:text
+});
+}
+catch(err){
+console.log(err);
+res.json({
+feedback:"AI Feedback failed 😭"
+});
+}
+});
 
-"/ai-roadmap",
+
+app.post("/ai-roadmap",
 
 async(req,res)=>{
 

@@ -5,69 +5,40 @@
 <meta charset="UTF-8">
 <meta name="viewport"content="width=device-width,initial-scale=1.0">
 <title>Questions</title>
-
 <link rel="stylesheet"href="/public.css">
 
 </head>
 
 <button
-
-class="chatbot-toggle"
-
-onclick="openChatbot()"
-
->
-
-🤖 AI Mentor
-
+    class="chatbot-toggle"
+    onclick="openChatbot()">
+    🤖 AI Mentor
 </button>
 
 <div
-
 id="chatbotBox"
-
 class="chatbot-box"
-
 >
 
 <div class="chatbot-header">
-
 🤖 AI DSA Mentor
-
 </div>
-
-
 
 <div
 
 id="chatMessages"
-
-class="chat-messages"
-
->
+class="chat-messages">
 
 </div>
 
-
-
 <div class="chat-input-area">
-
 <input
-
 type="text"
-
 id="userMessage"
-
-placeholder="Ask DSA doubts..."
-
->
-
-
+placeholder="Ask DSA doubts...">
 
 <button onclick="sendMessage()">
-
 Send
-
 </button>
 
 </div>
@@ -76,18 +47,20 @@ Send
 
 <body>
 
-
 <div class="navbar">
 <div class="logo">
 DSA Mentor AI 🚀
 
 </div>
-   
 
 <div class="nav-links">
 
 <a href="/dashboard">
 Dashboard
+</a>
+
+<a href="/mock-interview">
+Mock Interview
 </a>
 
 <a href="/questions">
@@ -120,79 +93,55 @@ class="profile-nav-icon"
 </div>
 
 
-
 <div class="questions-heading">
 
 <h1>
-
 📚  Study DSA
-
 </h1>
 
 <p>
-
 Practice consistently
 and track your progress 😎🔥
-
 </p>
 
 </div>
-
-
 
 <div class="search-section">
 
 <form
 action="/questions/search"
-method="GET"
->
+method="GET">
 
 <input
 type="text"
 name="topic"
-placeholder="Search by Topic"
->
-
-
+placeholder="Search by Topic">
 
 <button type="submit">
-
 Search
-
 </button>
-
 </form>
 
 </div>
 
 
 <h2 class="topic-title">
-
 📊 Topic Wise Progress
-
 </h2>
 
 
 <div class="topic-stats">
-
 <% for(let topic in topicStats){ %>
-
 <div class="topic-card">
-
 <h3>
-
 <%= topic %>
 
 </h3>
 
 <button
-
 class="topic-ai-btn"
-
 onclick="generateNotes('<%= topic %>')"
-
 >
-
 AI Notes 😎🔥
 </button>
 
@@ -201,24 +150,15 @@ AI Notes 😎🔥
 class="roadmap-btn"
 
 onclick="generateRoadmap('<%= topic %>')"
-
 >
-
 🛣️ AI Roadmap
-
 </button>
 
 
 <p>
-
-<%= topicStats[topic].solved %>
-
-/
-
+<%= topicStats[topic].solved %>/
 <%= topicStats[topic].total %>
-
 Solved
-
 </p>
 
 </div>
