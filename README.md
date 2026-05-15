@@ -43,4 +43,4 @@ AI-powered DSA learning platform built using Node.js, Express.js, MongoDB, and G
 ![Revision](screenshots/Revision.png)
 
 ### AI Mock Interview
-![AI mock](screenshots/AI mock.png)
+![AImock](screenshots/AImock.png)
