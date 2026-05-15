@@ -55,7 +55,10 @@ app.use(express.urlencoded({extended: true}));   //for read data
 app.use(session({
     secret:"mysupersecret",
     resave:false,
-    saveUninitialized:false
+    saveUninitialized:false,
+    cookie:{
+        maxAge: 1000*60*60*24
+    }
 }));
 
 app.use(express.static("public"));
@@ -595,6 +598,55 @@ app.get("/login" , (req,res)=>{
 
     app.get("/about",(req,res)=>{
     res.render("about");
+});
+
+
+app.get("/generate-question",
+
+async(req,res)=>{
+
+try{
+
+const model =
+genAI.getGenerativeModel({
+
+model:"gemini-2.5-flash"
+
+});
+
+const result =
+await model.generateContent(
+
+"Generate one DSA or HR interview question"
+
+);
+
+const response =
+await result.response;
+
+const text =
+response.text();
+
+res.json({
+
+question:text
+
+});
+
+}
+
+catch(err){
+
+console.log(err);
+
+res.json({
+
+question:"Failed to generate question 😭"
+
+});
+
+}
+
 });
 
 app.get("/dashboard",

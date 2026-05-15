@@ -61,13 +61,11 @@ Practice interview questions with AI 😎🔥
 
 </p>
 
-<div class="mock-card">
-
-<h2>
-
-Tell me about yourself
-
+<h2 id="aiQuestion">
+    Loading AI Question...
 </h2>
+
+
 
 <textarea
 
@@ -128,6 +126,31 @@ document.getElementById(
 data.feedback;
 
 }
+
+</script>
+
+<script>
+
+async function loadQuestion(){
+
+const response =
+await fetch(
+
+"/generate-question"
+
+);
+
+const data =
+await response.json();
+
+document.getElementById(
+"aiQuestion"
+).innerText =
+data.question;
+
+}
+
+loadQuestion();
 
 </script>
 
