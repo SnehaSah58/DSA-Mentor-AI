@@ -45,8 +45,13 @@ const User =
 require("./models/User");
 
 mongoose.connect(process.env.MONGO_URL)
-.then(()=> console.log("MongoDB Atlas Connected 😎"))
-.catch((err)=> console.log(err));
+.then(()=>{
+    console.log("MongoDB Connected 😎");
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 
 app.set("view engine" , "ejs");
 
@@ -1488,17 +1493,9 @@ async(req,res)=>{
 app.post("/login",
 
 async(req,res)=>{
-
-    const email =
-    req.body.email;
-
-    const password =
-    req.body.password;
-    const user =
-    await User.findOne({
-
-        email
-
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = await User.findOne({ email
     });
 
     if(!user){
@@ -1513,8 +1510,7 @@ async(req,res)=>{
         );
     }
 
-    const validPassword =
-    await bcrypt.compare(
+    const validPassword = await bcrypt.compare(
         password,
         user.password
     );
