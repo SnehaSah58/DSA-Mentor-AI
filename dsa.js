@@ -6,7 +6,6 @@ const genAI = new GoogleGenerativeAI(
 process.env.GEMINI_API_KEY
 );
 const axios = require("axios");
-
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     service:"gmail",
@@ -17,7 +16,6 @@ const transporter = nodemailer.createTransport({
         process.env.EMAIL_PASS
     }
 });
-
 transporter.verify(function(error,success){
     if(error){
         console.log(error);
@@ -25,7 +23,6 @@ transporter.verify(function(error,success){
         console.log("mail working");
     }
 });
-
 const Revision = require("./models/Revision");
 const UserProgress = require("./models/UserProgress");
 const Goal = require("./models/Goal")
@@ -34,16 +31,10 @@ const Question = require("./models/Question");
 const mongoose = require("mongoose");
 const express = require ("express");
 const app = express();
-
-const bcrypt =
-require("bcrypt");
-
-const session =
-require("express-session");
-
-const User =
-require("./models/User");
-
+const bcrypt = require("bcrypt");
+const session = require("express-session");
+const User = require("./models/User");
+console.log(process.env.MONGO_URL)
 mongoose.connect(process.env.MONGO_URL)
 .then(()=>{
     console.log("MongoDB Connected 😎");
